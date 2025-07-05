@@ -1,7 +1,6 @@
 #!/usr/bin/env -S deno run --allow-net=chat.googleapis.com --allow-run=afplay
 
-const WEBHOOK_URL =
-  "YOUR_GOOGLE_CHAT_SPACE_WEBHOOK_URL";
+const WEBHOOK_URL = Deno.env.get("GOOGLE_CHAT_WEBHOOK_URL");
 const SOUND_FILE = "/System/Library/Sounds/Glass.aiff";
 // const SOUND_FILE = "/System/Library/Sounds/Blow.aiff";
 // const SOUND_FILE = "/System/Library/Sounds/Ping.aiff";
@@ -80,8 +79,10 @@ async function main() {
       Deno.exit(1);
     }
 
-    await sendGoogleChatMessage(inputText);
-    console.log("メッセージが正常にGoogle Chatに送信されました。");
+    if (WEBHOOK_URL) {
+      await sendGoogleChatMessage(inputText);
+      console.log("メッセージが正常にGoogle Chatに送信されました。");
+    }
 
     await playSound();
   } catch (error) {
